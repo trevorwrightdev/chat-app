@@ -19,6 +19,16 @@ const io = new Server(httpServer, {
 
 io.on('connection', (socket) => {
     console.log(`User ${socket.id} has been connected to the socket.`)
+
+    socket.on('join_room', (data) => {
+        socket.join(data)
+    })
+
+    socket.on('message', (data) => {
+        socket.to(data.room).emit('receive', data)
+    })
+
+
 })
 
 httpServer.listen(PORT, () => {
