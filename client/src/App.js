@@ -44,9 +44,8 @@ function App() {
   }
 
   useEffect(() => {
-    // this is set at the beginning when messagelist is initialized, and then whenever it changes so it can accurately read the value of message list.
     socket.on('receive', onReceive)
-  }, [messageList])
+  }, [socket, messageList])
 
   return (
     <div className='app'>
