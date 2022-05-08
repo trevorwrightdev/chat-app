@@ -18,6 +18,8 @@ function App() {
       const joinRoom = () => {
         socket.emit('join_room', i + 1)
         setRoom(i + 1)
+        setMessageList([])
+        document.getElementById('input').value = ''
       }
 
       rooms.push(
@@ -28,6 +30,7 @@ function App() {
   }
 
   const sendMessage = () => {
+    document.getElementById('input').value = ''
     socket.emit('message', {message, room})
 
     const newMessageList = [...messageList]
@@ -35,13 +38,15 @@ function App() {
     setMessageList(newMessageList)
   }
 
+  const onReceive = (data) => {
+    const newMessageList = [...messageList]
+    newMessageList.push(<p style={{textAlign: 'left'}}>{data}</p>)
+    setMessageList(newMessageList)
+  }
+
   useEffect(() => {
-    socket.on('receive', (data) => {
-      const newMessageList = [...messageList]
-      newMessageList.push(<p style={{textAlign: 'left'}}>{data.message}</p>)
-      setMessageList(newMessageList)
-    })
-  }, [socket])
+    socket.on('receive', onReceive)
+  }, [socket, messageList])
 
   return (
     <div className='app'>
@@ -56,7 +61,7 @@ function App() {
               {messageList}
             </div>
             <div className='message-inputs'>
-              <input type='text' onChange={(e) => setMessage(e.target.value)}/>
+              <input id='input' type='text' onChange={(e) => setMessage(e.target.value)}/>
               <div onClick={sendMessage} className='send-button'>SEND</div>
             </div>
           </>
