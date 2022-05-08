@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 const socket = io.connect('http://localhost:3001')
 const ROOM_COUNT = 5
 
-
 function App() {
   
   const [room, setRoom] = useState(0)
@@ -45,8 +44,9 @@ function App() {
   }
 
   useEffect(() => {
+    // this is set at the beginning when messagelist is initialized, and then whenever it changes so it can accurately read the value of message list.
     socket.on('receive', onReceive)
-  }, [socket, messageList])
+  }, [messageList])
 
   return (
     <div className='app'>
